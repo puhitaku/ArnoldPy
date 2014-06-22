@@ -1,8 +1,7 @@
 PynoldC
 =======
-An ArnoldC interpreter written in Python
+*An ArnoldC interpreter written in Python*
 
-----
 
 The purpose of this repo is just to build an interpreter that runs ArnoldC code immediately in an terminal.
 
