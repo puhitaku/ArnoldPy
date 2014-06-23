@@ -74,6 +74,14 @@ class While(Block):
         self.value = value
         self.child_run = statements
 
+    def get_parsed_structure(self, nest_lv=0):
+        s = "".join("    " * nest_lv, "while ", self.value, ":\n")
+        for i in self.child_run:
+            if type(i) in [type(If()), type(IfElse()), type(While())]:
+                s += i.get_parsed_structure(nest_lv=nest_lv+1)
+            else:
+                s += "".join("    " * (nest_lv+1), i.get_parsed_structure(), "\n")
+        return s
 
 class Print(Statement):
     def __init__(self, string):
