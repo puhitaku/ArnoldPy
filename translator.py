@@ -7,7 +7,7 @@ class Runnables(object):
 
 class Block(Runnables):
     def __init__(self):
-        child_run = []
+        self.child_run = []
 
     def add_child(self, child):
         self.child_run.append(child)
