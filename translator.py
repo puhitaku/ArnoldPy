@@ -1,3 +1,5 @@
+import reserved_words as rword
+
 class Runnables(object):
     def __init__(self):
         raise NotImplementedError
@@ -17,17 +19,18 @@ class Statement(Runnables):
         pass
 
 class Main(Block):
-    def __init__(self, child=[]):
+    def __init__(self):
         super().__init__()
-        self.child_run = child
+        self.child_run = []
+        self.If, self.IfElse, self.While = If("", []), IfElse("", [], []), While("", [])
 
     def get_parsed_structure(self):
         s = ""
         for i in self.child_run:
-            if type(i) in [type(If()), type(IfElse()), type(While())]:
+            if type(i) in [type(self.If), type(self.IfElse), type(self.While)]:
                 s += i.get_parsed_structure(nest_lv=1)
             else:
-                s += "".join(i.get_parsed_structure(), "\n")
+                s += "".join([i.get_parsed_structure(), "\n"])
         return s
 
 class If(Block):
@@ -95,7 +98,7 @@ class DeclaringVariable(Statement):
         self.name, self.value = name, value
 
     def get_parsed_structure(self):
-        return "".join([self.name, " = ", self.value])
+        return "".join([self.name, " = ", str(self.value)])
 
 class EvaluatingExpression(Statement):
     def __init__(self, operands, operations):
@@ -119,3 +122,31 @@ class AssigningValue(Statement):
     def get_parsed_structure(self):
         s = self.exp.get_parsed_structure()
         return "".join([self.name, " = ", s])
+
+def Translate(inp):
+    code = inp.readlines()
+    w = rword.ReservedWords()
+    stack = []
+    pc = 0
+    WTF = rword.WTFExeption
+
+    while True:
+        l = code[pc]
+
+        if w.word["Main"] in l:
+            if stack == []:
+                stack.append(pc)
+            else:
+               raise WTF("Attempted to begin Main method in another method")
+
+        if w.word["Main_end"] in l:
+            if len(stack) == 1:
+                sys.exit()
+            else:
+                raise WTF("Reached the")
+
+        if w.word["If"] in l:
+            
+
+        if w.word["While"] in l:
+            pass

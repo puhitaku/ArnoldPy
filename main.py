@@ -1,4 +1,4 @@
-import parser
+import translator
 import interpreter
 
 def main():
@@ -13,7 +13,7 @@ def main():
     except IOError:
         print(file_name, "cannot be opened.")
     else:
-        interpreter.run( parser.parse(inp) )
+        exec( translator.translate(inp) )
 
 if __name__ == "__main__":
     main()
