@@ -101,51 +101,82 @@ class DeclaringVariable(Statement):
         return "".join([self.name, " = ", str(self.value)])
 
 class EvaluatingExpression(Statement):
-    def __init__(self, operands, operations):
-        self.operands = operands
+    def __init__(self, args, operations):
+        self.args = args
         self.operations = operations
 
         self.operations.insert(0, "")
-        #To avoid calculate first operand with nothing
+        #To avoid calculate first arg with nothing
 
     def get_parsed_structure(self):
         s = ""
-        for (i, j) in zip(self.operations, self.operands):
+        for (i, j) in zip(self.operations, self.args):
             s = "".join(["(", s, i, j, ")"])
         return s
 
 class AssigningValue(Statement):
-    def __init__(self, name, operands, operations):
+    def __init__(self, name, args, operations):
         self.name = name
-        self.exp = EvaluatingExpression(operands, operations)
+        self.exp = EvaluatingExpression(args, operations)
 
     def get_parsed_structure(self):
         s = self.exp.get_parsed_structure()
         return "".join([self.name, " = ", s])
+
+def GetOperation(l):
+    return "".join( l.split()[:-1] )
+
+def GetArgument(l):
+    return code[pc].split()[-1]
+
+def GetEndOfBlock(code, end_op):
+    for i in code:
+        if end_op in i:
+            return i
+    else:
+        return -1
+
+def GetArithmeticOpList(code, operator):
+    op_list = []
+    arg_list = []
+    for i in code:
+        op = " ".join(i.split()[:-1])
+        arg = i.split()[-1]
+
+        if op in operator:
+            arg_list.append(arg)
+            op_list.append(operator[op])
+    return op_list, arg_list
 
 def Translate(inp):
     code = inp.readlines()
     w = rword.ReservedWords()
     stack = []
     pc = 0
-    WTF = rword.WHAT_THE_FUCK_DID_I_DO_WRONG
+    WTFException = rword.WhatTheFuckDidIDoWrong
     while True:
-        l = code[pc]
+        l   = code[pc]
+        op  = GetOperation(l)
+        arg = GetArgument(l)
 
-        if w.word["Main"] in l:
+        if w.word["Main"] == op:
             if stack == []:
                 stack.append(pc)
             else:
-               raise WTF("attempted to begin Main method in another method")
+               raise WTFException(pc+1, "attempted to begin Main method in another method")
 
-        if w.word["Main_end"] in l:
+        if w.word["Main_end"] == op:
             if len(stack) == 1:
                 sys.exit()
             else:
-                raise WTF("unexpected end of Main")
+                raise WTFException(pc+1, "unexpected end of Main")
 
-        if w.word["If"] in l:
-            
+        if w.word["If"] == op:
+            b = code[pc:pc + GetEndOfBlock(code[pc:], w.word["If_end"])]
+            var = arg
+            op_list = GetArithmeticOpList(b, w.operator)
+            arg_list = GetArithmeticArgList(b, w.operator)
 
-        if w.word["While"] in l:
+
+        if w.word["While"] == op:
             pass

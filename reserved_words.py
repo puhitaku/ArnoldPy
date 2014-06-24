@@ -15,18 +15,21 @@ class ReservedWords:
             "AssignVar_name": "GET TO THE CHOPPER",
             "AssignVar_opr":  "HERE IS MY INVITATION",
             "AssignVar_end":  "ENOUGH TALK",
-            "Plus":           "GET UP",
-            "Minus":          "GET DOWN",
-            "Multiply":       "YOU'RE FIRED",
-            "Divide":         "HE HAD TO SPLIT",
-            "EqualTo":        "YOU ARE NOT YOU YOU ARE ME",
-            "GreaterThan":    "LET OFF SOME STEAM BENNET",
-            "Or":             "CONSIDER THAT A DIVORCE",
-            "And":            "KNOCK KNOCK"
         }
 
-class WHAT_THE_FUCK_DID_I_DO_WRONG(Exception):
-    def __init__(self, value):
-        self.value = value
+        self.operator = {
+            "GET UP": "+"
+            "GET DOWN": "-"
+            "YOU'RE FIRED": "*"
+            "HE HAD TO SPLIT": "/"
+            "YOU ARE NOT YOU YOU ARE ME": "=="
+            "LET OFF SOME STEAM BENNET": ">"
+            "CONSIDER THAT A DIVORCE": "|"
+            "KNOCK KNOCK": "&"
+        }
+
+class WhatTheFuckDidIDoWrong(Exception):
+    def __init__(self, line, value):
+        self.value = "line " str(line) + ": " + value
     def __str__(self):
         return repr(self.value)
