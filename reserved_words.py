@@ -25,7 +25,7 @@ class ReservedWords:
             "And":            "KNOCK KNOCK"
         }
 
-class WTFExeption(Exception):
+class WHAT_THE_FUCK_DID_I_DO_WRONG(Exception):
     def __init__(self, value):
         self.value = value
     def __str__(self):

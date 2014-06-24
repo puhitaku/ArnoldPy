@@ -128,8 +128,7 @@ def Translate(inp):
     w = rword.ReservedWords()
     stack = []
     pc = 0
-    WTF = rword.WTFExeption
-
+    WTF = rword.WHAT_THE_FUCK_DID_I_DO_WRONG
     while True:
         l = code[pc]
 
@@ -137,13 +136,13 @@ def Translate(inp):
             if stack == []:
                 stack.append(pc)
             else:
-               raise WTF("Attempted to begin Main method in another method")
+               raise WTF("attempted to begin Main method in another method")
 
         if w.word["Main_end"] in l:
             if len(stack) == 1:
                 sys.exit()
             else:
-                raise WTF("Reached the")
+                raise WTF("unexpected end of Main")
 
         if w.word["If"] in l:
             
