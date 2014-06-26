@@ -1,0 +1,33 @@
+IT'S SHOWTIME
+    HEY CHRISTMAS TREE var
+    YOU SET US UP 0
+
+    HEY CHRISTMAS TREE c
+    YOU SET US UP @NO PROBLEMO
+
+    HEY CHRISTMAS TREE isLess10
+    YOU SET US UP @NO PROBLEMO
+
+    STICK AROUND isLess10
+        GET TO THE CHOPPER c
+            HERE IS MY INVITATION var
+            YOU ARE NOT YOU YOU ARE ME 5
+        ENOUGH TALK
+
+        BECAUSE I'M GOING TO SAY PLEASE c
+            TALK TO THE HAND "I'll be back."
+        BULLSHIT
+            TALK TO THE HAND "Bullshit!"
+        YOU HAVE NO RESPECT FOR LOGIC
+
+        GET TO THE CHOPPER var
+            HERE IS MY INVITATION var
+            GET UP 1
+        ENOUGH TALK
+
+        GET TO THE CHOPPER isLess10
+            HERE IS MY INVITATION 10
+            LET OFF SOME STEAM BENNET var
+        ENOUGH TALK
+    CHILL
+YOU HAVE BEEN TERMINATED
