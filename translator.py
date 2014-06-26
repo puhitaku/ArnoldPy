@@ -35,6 +35,9 @@ class Main(Block):
                 s += i.get_parsed_structure(nest_lv=1)
             else:
                 s += "".join([i.get_parsed_structure(), "\n"])
+
+        while (s[-1], s[-2]) == ("\n", "\n") :
+            s = s[:-1]
         return s
 
 class If(Block):
@@ -50,24 +53,15 @@ class If(Block):
         return "else" in self.child
 
     def get_parsed_structure(self, nest_lv=0):
-        else_flag = False
-        s = "".join("    " * nest_lv, "if ", self.value, ":\n")
+        s = "".join(["    " * nest_lv, "if %s:\n" % GetEvalExpression(self.value)])
+
         for i in self.child:
             if i == "else":
-                else_flag = True
-                continue
-            if type(i) in [type(If()), type(While())]:
+                s += "".join(["    " * nest_lv, "else:\n"])
+            elif type(i) in [type(If("")), type(While(""))]:
                 s += i.get_parsed_structure(nest_lv=nest_lv+1)
             else:
-                s += "".join("    " * (nest_lv+1), i.get_parsed_structure(), "\n")
-
-        if else_flag:
-            s += "".join("    " * nest_lv, "else:\n")
-            for i in self.child_e:
-                if type(i) in [type(If()), type(While())]:
-                    s += i.get_parsed_structure(nest_lv=nest_lv+1)
-                else:
-                    s += "".join("    " * (nest_lv+1), i.get_parsed_structure(), "\n")
+                s += "".join(["    " * (nest_lv+1), i.get_parsed_structure(), "\n"])
         return s
 
 class While(Block):
@@ -77,10 +71,7 @@ class While(Block):
         self.value = exp
 
     def get_parsed_structure(self, nest_lv=0):
-        s = "".join(["    " * nest_lv,
-                     "while ((type(%s) == type(int())) & (%s == 0)) | ((type(%s) == type(bool())) & (%s == True))"
-                     % (self.value, self.value, self.value, self.value),
-                     ":\n"])
+        s = "".join(["    " * nest_lv, "while %s:\n" % GetEvalExpression(self.value)])
         for i in self.child:
             if type(i) in [type(If("")), type(While(""))]:
                 s += i.get_parsed_structure(nest_lv=nest_lv+1)
@@ -137,7 +128,7 @@ def GetOprAndArgs(l):
         if lsp & isp == isp:
             opr = " ".join( l.split()[:-len(lsp - isp)] )
     if opr == "":
-        return l, "<NONE>"
+        return " ".join(l.split()), "<NONE>"
     arg = " ".join( l.split()[len(opr.split()):] )
     return opr, arg
 
@@ -165,6 +156,9 @@ def ReplaceMacros(code):
     code = code.replace("@I LIED", "1")
     return code
 
+def GetEvalExpression(value):
+    return "(%s if type(%s) == type(bool()) else %s == 0)" % tuple([value]*3)
+
 def Translate(inp, debug=False):
     code = inp.readlines()
     w = rword.ReservedWords()
@@ -187,8 +181,11 @@ def Translate(inp, debug=False):
             op, arg   = GetOprAndArgs(l)
 
         #Remove \n code
-        if pc < len(code) - 1:
+        try:
             l_   = code[pc+1]
+        except IndexError:
+            pass
+        else:
             if l_[-1] == "\n":
                 l_ = l_[:-1]
             op_, arg_  = GetOprAndArgs(l_)
@@ -201,14 +198,14 @@ def Translate(inp, debug=False):
             print("arg:", arg)
             print("")
 
-        if w.word["Main"] == l:
+        if w.word["Main"] == op:
             if ptr == None:
                 tree = Main()
                 ptr = tree
             else:
                raise WTFException(pc+1, "attempted to begin Main method in another method")
 
-        elif w.word["Main_end"] == l:
+        elif w.word["Main_end"] == op:
             if type(ptr) == type(Main()):
                 out = ReplaceMacros(ptr.get_parsed_structure())
                 if debug:
@@ -222,19 +219,19 @@ def Translate(inp, debug=False):
             ptr = ptr.add_child(If(arg))
 
         elif w.word["Else"] == op:
-            if type(ptr) == type(If):
+            if type(ptr) == type(If("")):
                 if ptr.has_else() == False:
                     ptr.add_else()
                 else:
                     raise WTFException(pc+1, "there is already Else before this")
             else:
-                raise WTFException(pc+1, "there is no If before Else")
+                raise WTFException(pc+1, "there is no If before Else:")
 
         elif w.word["While"] == op:
             stack.append(ptr)
             ptr = ptr.add_child(While(arg))
 
-        elif l in [w.word["If_end"], w.word["While_end"]]:
+        elif op in [w.word["If_end"], w.word["While_end"]]:
             ptr = stack.pop()
 
         elif w.word["Print"] == op:
@@ -253,7 +250,10 @@ def Translate(inp, debug=False):
             ptr.add_child(AssigningValue(arg, [arg_] + arg_list, op_list))
             pc += offset
 
+        elif op == "":
+            pass
+
         else:
-            raise WTFException(pc+1, "unknown: " + op)
+            raise WTFException(pc+1, "unknown: \"%s\"" % op)
 
         pc += 1
