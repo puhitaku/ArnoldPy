@@ -1,19 +1,21 @@
-import translator
-import interpreter
+import sys
+
+import translator as tr
+#import interpreter
 
 def main():
-    import sys
     script_name = sys.argv[0]
-    file_name = sys.argv[1]
 
     try:
-        inp = open(script_name, "r")
+        file_name = sys.argv[1]
+        inp = open(file_name, "r")
     except IndexError:
-        interpreter.run_interactive()
+        pass
+        #interpreter.run_interactive()
     except IOError:
-        print(file_name, "cannot be opened.")
+        print("Could not open:", file_name)
     else:
-        exec( translator.translate(inp) )
+        exec( tr.Translate(inp) )
 
 if __name__ == "__main__":
     main()
