@@ -1,6 +1,7 @@
 import reserved_words as rword
 
 class Runnables(object):
+    """Abstract definition of runnable blocks/statements"""
     def __init__(self):
         raise NotImplementedError
 
@@ -8,6 +9,8 @@ class Runnables(object):
         raise NotImplementedError
 
 class Block(Runnables):
+    """Common constructor and methods that Blocks have"""
+    """Main, If and While are included"""
     def __init__(self):
         self.child = []
 
@@ -16,10 +19,12 @@ class Block(Runnables):
         return self.child[-1]
 
 class Statement(Runnables):
+    """Common definition of Statements (Not longer needed?)"""
     def __init__(self):
         pass
 
 class Main(Block):
+    """Main method"""
     def __init__(self):
         super().__init__()
 
@@ -33,6 +38,7 @@ class Main(Block):
         return s
 
 class If(Block):
+    """If block"""
     def __init__(self, exp):
         super().__init__()
         self.value = exp
@@ -65,6 +71,7 @@ class If(Block):
         return s
 
 class While(Block):
+    """While block"""
     def __init__(self, exp):
         super().__init__()
         self.value = exp
@@ -82,6 +89,7 @@ class While(Block):
         return s
 
 class Print(Statement):
+    """Print statement"""
     def __init__(self, string):
         self.string = string
 
@@ -89,6 +97,7 @@ class Print(Statement):
         return "".join(["print(", self.string, ")"])
 
 class DeclaringVariable(Statement):
+    """Declaration of variables"""
     def __init__(self, name, value):
         self.name, self.value = name, value
 
@@ -96,6 +105,7 @@ class DeclaringVariable(Statement):
         return "".join([self.name, " = ", str(self.value)])
 
 class Expression(Statement):
+    """Expression recognizer class"""
     def __init__(self, args, operations):
         self.args = args
         self.operations = operations
@@ -166,6 +176,7 @@ def Translate(inp, debug=False):
     WTFException = rword.WhatTheFuckDidIDoWrong
 
     while True:
+        #Get a line of program
         try:
             l = code[pc]
         except IndexError:
@@ -175,11 +186,14 @@ def Translate(inp, debug=False):
                 l = l[:-1]
             op, arg   = GetOprAndArgs(l)
 
+        #Remove \n code
         if pc < len(code) - 1:
             l_   = code[pc+1]
             if l_[-1] == "\n":
                 l_ = l_[:-1]
             op_, arg_  = GetOprAndArgs(l_)
+
+
 
         if debug:
             print("l:", l)
