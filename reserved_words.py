@@ -15,6 +15,8 @@ class ReservedWords:
             "AssignVar": "GET TO THE CHOPPER",
             "AssignVar_opr":  "HERE IS MY INVITATION",
             "AssignVar_end":  "ENOUGH TALK",
+            "0": "@I LIED",
+            "1": "@NO PROBLEMO"
         }
 
         self.operator = {
