@@ -1,14 +1,14 @@
 PynoldC
 =======
-*An ArnoldC interpreter written in Python3*
+*An ArnoldC translator / executor written in Python3*
 
-The purpose of this repo is just to build an interpreter that runs ArnoldC code immediately in an terminal.
+The purpose of this repo is just to build an implementation of ArnoldC in Python3.
 
 It's not completed to develop and I'm a beginner of Python so please feel free to issue problems or to send me pull requests.
 
 ### Progress of this project
 
-- Translator ... WIP
+- Translator ... *WIP*
 
 Implementation tasks     | Status
 -------------------------|-------
@@ -22,7 +22,9 @@ Input integer            |WIP
 Method declaration       |WIP
 Method call              |Not yet
 
-- Real-time interpreter ... Not yet
+- Real-time interpreter ... Discontinued
+
+I used to think of an INTERPRETER of ArnoldC but I thought it'll take too many hours to implement this while this language is just a joke.
 
 ### Usage
 
