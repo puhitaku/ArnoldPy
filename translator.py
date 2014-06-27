@@ -27,7 +27,7 @@ class Block(Runnables):
         return self.child[-1]
 
 class Statement(Runnables):
-    """Common definition of Statements (Not longer needed?)"""
+    """Common definition of Statements (No longer needed?)"""
     def __init__(self):
         pass
 
@@ -139,7 +139,7 @@ class AssigningValue(Statement):
 #-----------------------------
 
 def GetOprAndArgs(l):
-    """Extract the list of operations and their arguments from block."""
+    """Extract the operation and its arguments from line."""
     r = rword.ReservedWords()
     lsp = set(l.split())
     opr = ""
@@ -193,7 +193,7 @@ def GetEvalExpression(value):
 
 def Translate(inp, debug=False):
     """Translate the ArnoldC code in Python."""
-    code = inp.readlines()
+    code = [ReplaceMacros(x) for x in inp.readlines()]
     w = rword.ReservedWords()
     tree = None
     stack = [None]
@@ -245,7 +245,7 @@ def Translate(inp, debug=False):
 
         elif w.word["Main_end"] == op:
             if type(ptr) == type(Main()):
-                out = ReplaceMacros(ptr.get_parsed_structure())
+                out = ptr.get_parsed_structure()
                 if debug:
                     print(out)
                 return out
