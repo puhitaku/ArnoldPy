@@ -10,7 +10,7 @@ class Runnables(object):
 
 class Block(Runnables):
     """Common constructor and methods that Blocks have"""
-    """Main, If and While are included"""
+    """Main, If and While are included."""
     def __init__(self):
         self.child = []
 
@@ -88,7 +88,7 @@ class Print(Statement):
         return "".join(["print(", self.string, ")"])
 
 class DeclaringVariable(Statement):
-    """Declaration of variables"""
+    """Variable declaration"""
     def __init__(self, name, value):
         self.name, self.value = name, value
 
@@ -97,6 +97,8 @@ class DeclaringVariable(Statement):
 
 class Expression(Statement):
     """Expression recognizer class"""
+    """It inherits Statement class but it's not a statement."""
+    """It's used to construct the right side of equation."""
     def __init__(self, args, operations):
         self.args = args
         self.operations = operations
@@ -111,6 +113,8 @@ class Expression(Statement):
         return s
 
 class AssigningValue(Statement):
+    """Value assign statement"""
+    """It uses Expression class to get the right side of equation."""
     def __init__(self, name, args, operations):
         self.name = name
         self.exp = Expression(args, operations)
@@ -120,6 +124,7 @@ class AssigningValue(Statement):
         return "".join([self.name, " = ", s])
 
 def GetOprAndArgs(l):
+    """Extract the list of operations and their arguments from block."""
     r = rword.ReservedWords()
     lsp = set(l.split())
     opr = ""
@@ -133,13 +138,16 @@ def GetOprAndArgs(l):
     return opr, arg
 
 def GetEndOfBlock(code, end_op):
+    """Get the last line of block."""
+    """It returns -1 if it can't find."""
     for i in code:
         if end_op in i:
             return code.index(i)
     else:
         return -1
 
-def GetArithmeticElements(code, operator):
+def GetArithmeticMembers(code, operator):
+    """Get members and operators used in equation."""
     op_list = []
     arg_list = []
     for i in code:
@@ -152,14 +160,19 @@ def GetArithmeticElements(code, operator):
     return op_list, arg_list
 
 def ReplaceMacros(code):
+    """Replace macro words."""
     code = code.replace("@NO PROBLEMO", "0")
     code = code.replace("@I LIED", "1")
     return code
 
 def GetEvalExpression(value):
+    """Generate evaluation formula."""
+    """In ArnoldC, 0 means True and other numbers mean False."""
+    """To follow ArnoldC's evaluation rule, it's little complicated."""
     return "(%s if type(%s) == type(bool()) else %s == 0)" % tuple([value]*3)
 
 def Translate(inp, debug=False):
+    """Translate the ArnoldC code in Python."""
     code = inp.readlines()
     w = rword.ReservedWords()
     tree = None
@@ -246,7 +259,7 @@ def Translate(inp, debug=False):
             offset = GetEndOfBlock(code[pc:], w.word["AssignVar_end"])
             b = code[pc:pc + offset]
 
-            op_list, arg_list = GetArithmeticElements(b, w.operator)
+            op_list, arg_list = GetArithmeticMembers(b, w.operator)
             ptr.add_child(AssigningValue(arg, [arg_] + arg_list, op_list))
             pc += offset
 
