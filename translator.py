@@ -1,5 +1,9 @@
 import reserved_words as rword
 
+
+#Abstract syntax model
+#---------------------
+
 class Runnables(object):
     """Abstract definition of runnable blocks/statements"""
     def __init__(self):
@@ -22,6 +26,9 @@ class Statement(Runnables):
     """Common definition of Statements (Not longer needed?)"""
     def __init__(self):
         pass
+
+#Concrete blocks/statements model
+#--------------------------------
 
 class Main(Block):
     """Main method"""
@@ -119,6 +126,10 @@ class AssigningValue(Statement):
         s = self.exp.get_parsed_structure()
         return "".join([self.name, " = ", s])
 
+
+#Functions for syntax analysis
+#-----------------------------
+
 def GetOprAndArgs(l):
     r = rword.ReservedWords()
     lsp = set(l.split())
@@ -158,6 +169,10 @@ def ReplaceMacros(code):
 
 def GetEvalExpression(value):
     return "(%s if type(%s) == type(bool()) else %s == 0)" % tuple([value]*3)
+
+
+#Main translator function
+#------------------------
 
 def Translate(inp, debug=False):
     code = inp.readlines()
