@@ -1,5 +1,9 @@
-import reserved_words as rword
+""" ArnoldC -> Python translator
+    This file includes abstract model of blocks and statements.
 
+"""
+
+import reserved_words as rword
 
 #Abstract syntax model
 #---------------------
@@ -172,15 +176,16 @@ def GetArithmeticMembers(code, operator):
 
 def ReplaceMacros(code):
     """Replace macro words."""
-    code = code.replace("@NO PROBLEMO", "0")
-    code = code.replace("@I LIED", "1")
+    w = rword.ReservedWords()
+    code = code.replace(w.word["1"], "1")
+    code = code.replace(w.word["0"], "0")
     return code
 
 def GetEvalExpression(value):
     """Generate evaluation formula."""
     """In ArnoldC, 0 means True and other numbers mean False."""
     """To follow ArnoldC's evaluation rule, it's little complicated."""
-    return "(%s if type(%s) == type(bool()) else %s == 0)" % tuple([value]*3)
+    return "(%s if type(%s) == type(bool()) else %s > 0)" % tuple([value]*3)
 
 
 #Main translator function
@@ -225,6 +230,11 @@ def Translate(inp, debug=False):
             print("op:", op)
             print("arg:", arg)
             print("")
+
+            print("l_:", l_)
+            print("op_:", op_)
+            print("arg_:", arg_)
+            print("\n")
 
         if w.word["Main"] == op:
             if ptr == None:
