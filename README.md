@@ -1,10 +1,12 @@
-PynoldC
+ArnoldPy
 =======
 *An ArnoldC translator / executor written in Python3*
 
-The purpose of this repo is just to build an implementation of ArnoldC in Python3.
+The purpose of this repo is just to build an implementation of ArnoldC in Python 3.
 
 It's not completed to develop and I'm a beginner of Python so please feel free to issue problems or to send me pull requests.
+
+This was formerly called "PynoldC" and now it's renamed to "ArnoldPy".
 
 ### Progress of this project
 
